@@ -4,10 +4,25 @@ Run the Fuuz Device Gateway on any machine with [Docker](https://docs.docker.com
 
 ## Prerequisites
 
-- Docker Engine with the Compose plugin (`docker compose version` should print a version). On macOS/Windows, install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
-- No login or credentials required — the gateway image is pulled anonymously from a public registry.
+- **A working Fuuz Enterprise environment.** The gateway connects to your Fuuz Enterprise tenant. You'll need either:
+  - a **free limited trial license**, or
+  - a **full Enterprise-scale subscription** (public or private cloud).
+
+  Don't have one yet? [Get started with Fuuz](https://fuuz.com).
+- **Docker Engine with the Compose plugin** (`docker compose version` should print a version). On macOS/Windows, install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- No registry login or credentials required — the gateway image is pulled anonymously from a public registry.
 
 ## Quick start
+
+### Option A — one-line installer
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Fuuz-Platform/device-gateway-docker/main/install.sh | bash
+```
+
+This creates a `fuuz-device-gateway/` folder in your current directory, writes the compose file, and starts the gateway.
+
+### Option B — clone the repo
 
 ```bash
 git clone https://github.com/Fuuz-Platform/device-gateway-docker.git
@@ -15,7 +30,7 @@ cd device-gateway-docker
 docker compose up -d
 ```
 
-That's it. The gateway is now running in the background.
+Either way, the gateway is now running in the background.
 
 Check that it's up:
 
@@ -24,6 +39,10 @@ docker compose ps
 docker compose logs -f
 ```
 
+## Updates
+
+**You do not upgrade the gateway from the command line.** Once it's running and connected to your Fuuz Enterprise tenant, updates are managed **from within the running application at runtime** — new packages and releases are delivered and applied automatically. There's no need to `docker compose pull` or re-run the installer to stay current.
+
 ## Managing the gateway
 
 | Task | Command |
@@ -31,7 +50,9 @@ docker compose logs -f
 | View logs | `docker compose logs -f` |
 | Restart | `docker compose restart` |
 | Stop & remove container | `docker compose down` |
-| Upgrade to the latest image | `docker compose pull && docker compose up -d` |
+| Start again | `docker compose up -d` |
+
+Run these from the folder that contains `docker-compose.yml`.
 
 ## What gets created
 
@@ -46,4 +67,3 @@ The gateway stores its configuration and state in a `.gatewaydata/` folder next 
 
 - **Ports** — the gateway publishes host ports `5500–5550`. Make sure nothing else on the machine is using that range.
 - **Reaching the host** — `host.docker.internal` resolves to the host machine from inside the container, so the gateway can talk to services (OPC-UA, Modbus, the Fuuz platform, etc.) running on the host.
-- **Image tag** — this uses `:latest`. For a locked-down deployment, pin a specific image tag in `docker-compose.yml`.
