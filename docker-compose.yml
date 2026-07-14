@@ -1,0 +1,17 @@
+services:
+  fuuzdevicegateway:
+    hostname: fuuz-device-gateway
+    image: public.ecr.aws/fuuz/build/native-app-device-gateway-server:latest
+    restart: always
+    stop_grace_period: 60s
+    ports:
+      - 5500-5550:5500-5550
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    environment:
+      NODE_ENV: production
+    command: /fuuzdevicegateway/fuuzdevicegateway
+    volumes:
+      - ./.gatewaydata/appData:/root/.fuuzdevicegateway/
+      - ./.gatewaydata/drivers:/fuuzdevicegateway/drivers/
+    pull_policy: always
