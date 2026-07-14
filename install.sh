@@ -4,7 +4,7 @@
 #
 #   curl -fsSL https://raw.githubusercontent.com/Fuuz-Platform/device-gateway-docker/main/install.sh | bash
 #
-# Creates ./fuuz-device-gateway, writes docker-compose.yml, and starts the gateway.
+# Creates ./fuuz-device-gateway, downloads docker-compose.yml, and starts the gateway.
 # Requires: Docker Engine with the Compose plugin, and a working Fuuz Enterprise
 # environment (free trial or Enterprise subscription) for the gateway to connect to.
 
