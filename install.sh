@@ -11,6 +11,7 @@
 set -euo pipefail
 
 INSTALL_DIR="${FUUZ_GATEWAY_DIR:-fuuz-device-gateway}"
+REPO_RAW="${FUUZ_GATEWAY_REPO_RAW:-https://raw.githubusercontent.com/Fuuz-Platform/device-gateway-docker/main}"
 
 info() { printf '\033[1;34m==>\033[0m %s\n' "$1"; }
 err()  { printf '\033[1;31mError:\033[0m %s\n' "$1" >&2; }
@@ -18,6 +19,11 @@ err()  { printf '\033[1;31mError:\033[0m %s\n' "$1" >&2; }
 # --- Preflight -------------------------------------------------------------
 if ! command -v docker >/dev/null 2>&1; then
   err "Docker is not installed. Install Docker first: https://docs.docker.com/get-docker/"
+  exit 1
+fi
+
+if ! command -v curl >/dev/null 2>&1; then
+  err "curl is required to download the compose file."
   exit 1
 fi
 
@@ -39,26 +45,8 @@ cd "$INSTALL_DIR"
 if [ -f docker-compose.yml ]; then
   info "docker-compose.yml already exists — leaving it as-is"
 else
-  info "Writing docker-compose.yml"
-  cat > docker-compose.yml <<'YAML'
-services:
-  fuuzdevicegateway:
-    hostname: fuuz-device-gateway
-    image: public.ecr.aws/fuuz/build/native-app-device-gateway-server:latest
-    restart: always
-    stop_grace_period: 60s
-    ports:
-      - 5500-5550:5500-5550
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    environment:
-      NODE_ENV: production
-    command: /fuuzdevicegateway/fuuzdevicegateway
-    volumes:
-      - ./.gatewaydata/appData:/root/.fuuzdevicegateway/
-      - ./.gatewaydata/drivers:/fuuzdevicegateway/drivers/
-    pull_policy: always
-YAML
+  info "Downloading docker-compose.yml"
+  curl -fsSL "$REPO_RAW/docker-compose.yml" -o docker-compose.yml
 fi
 
 # --- Launch ----------------------------------------------------------------
