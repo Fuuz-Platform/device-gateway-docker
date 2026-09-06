@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fuuz Device Gateway — Docker &mdash; Fuuz Accelerator</title>
+<meta name="description" content="One-command Docker deployment for the Fuuz Device Gateway">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://accelerators.fuuz.com/device-gateway-docker/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://accelerators.fuuz.com/device-gateway-docker/">
+<meta property="og:site_name" content="Fuuz Accelerators">
+<meta property="og:title" content="Fuuz Device Gateway — Docker &mdash; Fuuz Accelerator">
+<meta property="og:description" content="One-command Docker deployment for the Fuuz Device Gateway">
+<link rel="icon" href="assets/appicon-violet.svg">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="prose.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "Fuuz Device Gateway \u2014 Docker",
+  "url": "https://accelerators.fuuz.com/device-gateway-docker/",
+  "description": "One-command Docker deployment for the Fuuz Device Gateway",
+  "codeRepository": "https://github.com/Fuuz-Platform/device-gateway-docker",
+  "applicationCategory": "BusinessApplication",
+  "runtimePlatform": "Fuuz",
+  "author": {
+    "@type": "Organization",
+    "name": "Fuuz",
+    "url": "https://fuuz.com"
+  }
+}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="../"><img src="assets/logo-horizontal-on-midnight.svg" alt="Fuuz"></a>
+    <span class="section">Accelerators</span>
+    <nav><a href="#prerequisites">Prerequisites</a><a href="#quick-start">Quick start</a><a href="#updates">Updates</a><a href="https://github.com/Fuuz-Platform/device-gateway-docker">GitHub</a></nav>
+  </div>
+</header>
+<main>
+<div class="wrap hero">
+  <p class="eyebrow">Accelerator &middot; Runs on your machine</p>
+  <h1>Fuuz Device Gateway — <span class="accent">Docker</span></h1>
+  <p class="lede">One-command Docker deployment for the Fuuz Device Gateway</p>
+  <div class="ctas">
+    <a class="cta cta-primary" href="https://github.com/Fuuz-Platform/device-gateway-docker">Get the package</a>
+    <a class="cta cta-secondary" href="../">All accelerators</a>
+  </div>
+</div>
+<section>
+  <div class="wrap prose">
+<p>Run the Fuuz Device Gateway on any machine with <a href="https://docs.docker.com/get-docker/">Docker</a> in one command.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><strong>A working Fuuz Enterprise environment.</strong> The gateway connects to your Fuuz Enterprise tenant. You'll need either:</li>
+<li>a <strong>free limited trial license</strong>, or</li>
+<li>a <strong>full Enterprise-scale subscription</strong> (public or private cloud).</li>
+</ul>
+<p>Don't have one yet? <a href="https://fuuz.com">Get started with Fuuz</a>.
+- <strong>Docker Engine with the Compose plugin</strong> (<code>docker compose version</code> should print a version). On macOS/Windows, install <a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a>.
+- No registry login or credentials required — the gateway image is pulled anonymously from a public registry.</p>
+<h2 id="quick-start">Quick start</h2>
+<h3>Option A — one-line installer</h3>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/Fuuz-Platform/device-gateway-docker/main/install.sh | bash
+</code></pre>
+<p>This creates a <code>fuuz-device-gateway/</code> folder in your current directory, writes the compose file, and starts the gateway.</p>
+<h3>Option B — clone the repo</h3>
+<pre><code class="language-bash">git clone https://github.com/Fuuz-Platform/device-gateway-docker.git
+cd device-gateway-docker
+docker compose up -d
+</code></pre>
+<p>Either way, the gateway is now running in the background.</p>
+<p>Check that it's up:</p>
+<pre><code class="language-bash">docker compose ps
+docker compose logs -f
+</code></pre>
+<h2 id="updates">Updates</h2>
+<p><strong>You do not upgrade the gateway from the command line.</strong> Once it's running and connected to your Fuuz Enterprise tenant, updates are managed <strong>from within the running application at runtime</strong> — new packages and releases are delivered and applied automatically. There's no need to <code>docker compose pull</code> or re-run the installer to stay current.</p>
+<h2 id="managing-the-gateway">Managing the gateway</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View logs</td>
+<td><code>docker compose logs -f</code></td>
+</tr>
+<tr>
+<td>Restart</td>
+<td><code>docker compose restart</code></td>
+</tr>
+<tr>
+<td>Stop &amp; remove container</td>
+<td><code>docker compose down</code></td>
+</tr>
+<tr>
+<td>Start again</td>
+<td><code>docker compose up -d</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Run these from the folder that contains <code>docker-compose.yml</code>.</p>
+<h2 id="what-gets-created">What gets created</h2>
+<p>The gateway stores its configuration and state in a <code>.gatewaydata/</code> folder next to <code>docker-compose.yml</code>:</p>
+<ul>
+<li><code>.gatewaydata/appData</code> — gateway config, registration, and runtime state</li>
+<li><code>.gatewaydata/drivers</code> — custom device drivers</li>
+</ul>
+<p><strong>Back up <code>.gatewaydata/</code> and do not delete it</strong> — removing it wipes the gateway's configuration. It is git-ignored so your local state is never committed.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li><strong>Ports</strong> — the gateway publishes host ports <code>5500–5550</code>. Make sure nothing else on the machine is using that range.</li>
+<li><strong>Reaching the host</strong> — <code>host.docker.internal</code> resolves to the host machine from inside the container, so the gateway can talk to services (OPC-UA, Modbus, the Fuuz platform, etc.) running on the host.</li>
+</ul>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap">
+    <p>Fuuz&reg; is an Enterprise Industrial Intelligence Platform.
+      <a href="https://accelerators.fuuz.com/">All accelerators</a> &middot;
+      <a href="https://github.com/Fuuz-Platform/device-gateway-docker">Source</a> &middot;
+      <a href="https://fuuz.com">fuuz.com</a></p>
+  </div>
+</footer>
+</body>
+</html>
