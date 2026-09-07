@@ -1,5 +1,9 @@
 # Fuuz Device Gateway — Docker
 
+> **Beta concept — not an accelerator.** Published as a working concept to read, run
+> and take the pattern from. It is not a supported deliverable, it carries no service
+> level agreement, and it may change or be withdrawn without notice.
+
 Run the Fuuz Device Gateway on any machine with [Docker](https://docs.docker.com/get-docker/) in one command.
 
 ## Prerequisites
@@ -67,3 +71,9 @@ The gateway stores its configuration and state in a `.gatewaydata/` folder next 
 
 - **Ports** — the gateway publishes host ports `5500–5550`. Make sure nothing else on the machine is using that range.
 - **Reaching the host** — `host.docker.internal` resolves to the host machine from inside the container, so the gateway can talk to services (OPC-UA, Modbus, the Fuuz platform, etc.) running on the host.
+
+## Service levels
+
+No service level agreement applies to anything published here. It becomes a supported
+deliverable only once it has been implemented by a Fuuz services professional or an
+approved Fuuz partner.
